@@ -1,0 +1,272 @@
+:host {
+	display: block;
+}
+
+.transactions {
+	margin-top: 3.5rem;
+}
+
+.section-header {
+	margin-bottom: 1.25rem;
+}
+
+.eyebrow {
+	margin: 0 0 .5rem;
+	color: #176b52;
+	font-size: .875rem;
+	font-weight: 700;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+}
+
+h2 {
+	margin: 0;
+	color: #172033;
+	font-size: 1.5rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+	border: 1px solid #dbe3ef;
+	border-radius: .75rem;
+	background: #fff;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+th, td {
+	padding: 1rem;
+	border-bottom: 1px solid #dbe3ef;
+	white-space: nowrap;
+
+  &.actions-column {
+    text-align: center;
+  }
+}
+
+th {
+	color: #516078;
+	font-size: .8125rem;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+}
+
+.transaction-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--color-hover-content);
+  }
+}
+
+
+.add-button {
+	border: none;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	padding: 0;
+
+	&:hover {
+		cursor: pointer;
+		background: var(--color-border);
+	}
+
+	img {
+		width: 24px;
+		height: 24px;
+	}
+}
+
+.edit-button, .delete-button {
+  margin: 5px;
+  padding: 4px;
+  border-radius: 20%;
+  border: none;
+
+  &:hover {
+		cursor: pointer;
+		background: var(--color-border);
+	}
+}
+
+tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+td {
+	color: #26334a;
+}
+
+.status {
+	font-weight: 700;
+}
+
+.status.incoming {
+	color: #299877;
+}
+
+.status.outgoing {
+	color: #b42318;
+}
+
+.state-message {
+	margin: 0;
+	padding: 1rem;
+	border-radius: .5rem;
+	background: #fff;
+	color: #516078;
+}
+
+.state-message.error {
+	color: #b42318;
+}
+
+
+
+/* Delete confirmation modal */
+
+.delete-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.delete-modal {
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  border: 1px solid #dbe3ef;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+  animation: delete-modal-appear 0.18s ease-out;
+}
+
+.delete-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #dbe3ef;
+}
+
+.delete-modal-header h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.delete-modal-close {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #516078;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.delete-modal-close:hover:not(:disabled) {
+  color: #172033;
+}
+
+.delete-modal-content {
+  padding: 1.5rem;
+}
+
+.delete-modal-content p {
+  margin: 0;
+  color: #516078;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: normal;
+}
+
+.delete-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem 1.25rem;
+  border-top: 1px solid #dbe3ef;
+}
+
+.delete-cancel-button,
+.delete-confirm-button {
+  min-height: 40px;
+  padding: 0.625rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.delete-cancel-button {
+  border-color: #dbe3ef;
+  background: #fff;
+  color: #26334a;
+}
+
+.delete-cancel-button:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.delete-confirm-button {
+  background: #b42318;
+  color: #fff;
+}
+
+.delete-confirm-button:hover:not(:disabled) {
+  background: #912018;
+}
+
+.delete-cancel-button:disabled,
+.delete-confirm-button:disabled,
+.delete-modal-close:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.delete-cancel-button:focus-visible,
+.delete-confirm-button:focus-visible,
+.delete-modal-close:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 3px;
+}
+
+@keyframes delete-modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .delete-modal {
+    animation: none;
+  }
+}

@@ -1,0 +1,78 @@
+<section class="categories-tags" aria-labelledby="categories-heading">
+  <div class="section-heading">
+    <h1 id="categories-heading">Categories</h1>
+    <button class="add-button category" type="button" aria-label="Add category" title="Add category" (click)="openCreate('category')">+</button>
+  </div>
+
+  @if (isLoading) {
+    <p class="state-message">Loading categories and tags…</p>
+  } @else if (loadError) {
+    <p class="state-message error" role="alert">{{ loadError }}</p>
+  } @else {
+    @if (categories.length === 0) {
+      <p class="state-message">No categories exist yet.</p>
+    } @else {
+      <div class="item-grid" aria-label="Categories">
+        @for (category of categories; track category.id) {
+          <button class="item-card category-card" type="button" (click)="openEdit('category', category)">
+            {{ category.name }}
+          </button>
+        }
+      </div>
+    }
+
+    <div class="section-heading tags-heading">
+      <h1 id="tags-heading">Tags</h1>
+      <button class="add-button tag" type="button" aria-label="Add tag" title="Add tag" (click)="openCreate('tag')">+</button>
+    </div>
+
+    @if (tags.length === 0) {
+      <p class="state-message">No tags exist yet.</p>
+    } @else {
+      <div class="item-grid" aria-labelledby="tags-heading">
+        @for (tag of tags; track tag.id) {
+          <button class="item-card tag-card" type="button" (click)="openEdit('tag', tag)">
+            {{ tag.name }}
+          </button>
+        }
+      </div>
+    }
+  }
+</section>
+
+@if (modal; as currentModal) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="item-modal-title" (click)="$event.stopPropagation()">
+      <header class="modal-header">
+        <h2 id="item-modal-title">{{ currentModal.id === null ? 'New' : 'Edit' }} {{ currentModal.type }}</h2>
+        <button class="close-button" type="button" aria-label="Close" (click)="closeModal()">×</button>
+      </header>
+
+      <form [formGroup]="itemForm" (ngSubmit)="save()">
+        <label for="item-name">Name</label>
+        <input id="item-name" type="text" formControlName="name" required autocomplete="off" />
+
+        @if (itemForm.controls.name.touched && itemForm.controls.name.invalid) {
+          <p class="modal-error" role="alert">A name is required.</p>
+        }
+        @if (modalError) {
+          <p class="modal-error" role="alert">{{ modalError }}</p>
+        }
+
+        <footer class="modal-actions">
+          @if (currentModal.id !== null) {
+            <button class="delete-button" type="button" [disabled]="isSaving" (click)="delete()">Delete</button>
+          }
+          <span class="action-spacer"></span>
+          <button class="cancel-button" type="button" [disabled]="isSaving" (click)="closeModal()">Cancel</button>
+          <button 
+            [class]="currentModal.type == 'category' ? 'save-button category' : 'save-button tag'" 
+            type="submit" 
+            [disabled]="isSaving"
+          >{{ isSaving ? 'Saving…' : 'Save' }}
+          </button>
+        </footer>
+      </form>
+    </section>
+  </div>
+}

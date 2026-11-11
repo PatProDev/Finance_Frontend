@@ -1,0 +1,149 @@
+<div class="modal-backdrop" (click)="close()">
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="new-transaction-title" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2 id="new-transaction-title">
+        {{ isEditMode ? 'Edit transaction' : 'New transaction' }}
+      </h2>
+      <button class="close-button" type="button" aria-label="Close" (click)="close()">×</button>
+    </header>
+
+    <form class="transaction-form" [formGroup]="transactionForm" (ngSubmit)="onConfirm()">
+      <div class="form-row">
+        <label for="transaction-amount">Amount <span aria-hidden="true">*</span></label>
+        <div class="field-control">
+          <input id="transaction-amount" type="number" min="0.01" step="0.01" formControlName="amount" required />
+          @if (transactionForm.controls.amount.touched && transactionForm.controls.amount.invalid) {
+            <p class="field-error">This field is required</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="transaction-currency">Currency <span aria-hidden="true">*</span></label>
+        <div class="field-control">
+          <input id="transaction-currency" type="text" formControlName="currency" required />
+          @if (transactionForm.controls.currency.touched && transactionForm.controls.currency.invalid) {
+            <p class="field-error">This field is required</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <span class="field-label">Category <span aria-hidden="true">*</span></span>
+        <div class="field-control">
+          <button class="selection-button" type="button" (click)="openPicker('category')">{{ selectedCategory?.name ?? 'Add category' }}</button>
+          @if (categoryTouched && !selectedCategory) {
+            <p class="field-error">This field is required</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <span class="field-label">Tags</span>
+        <button class="selection-button" type="button" (click)="openPicker('tag')">{{ selectedTagsLabel }}</button>
+      </div>
+
+      <div class="form-row">
+        <label for="transaction-date">Date <span aria-hidden="true">*</span></label>
+        <div class="field-control">
+          <input id="transaction-date" type="date" formControlName="date" required />
+          @if (transactionForm.controls.date.touched && transactionForm.controls.date.invalid) {
+            <p class="field-error">This field is required</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="transaction-description">Description</label>
+        <input id="transaction-description" type="text" formControlName="description" />
+      </div>
+
+      <div class="form-row type-row">
+        <span class="field-label">Type <span aria-hidden="true">*</span></span>
+        <div class="field-control">
+          <div class="type-options">
+            <label class="radio-label" for="transaction-incoming"><input type="radio" id="transaction-incoming" formControlName="transactionType" value="incoming" /> Incoming</label>
+            <label class="radio-label" for="transaction-outgoing"><input type="radio" id="transaction-outgoing" formControlName="transactionType" value="outgoing" /> Outgoing</label>
+          </div>
+          @if (transactionForm.controls.transactionType.touched && transactionForm.controls.transactionType.invalid) {
+            <p class="field-error">This field is required</p>
+          }
+        </div>
+      </div>
+
+      @if (submitError) {
+        <p class="submit-error" role="alert">{{ submitError }}</p>
+      }
+
+      <div class="modal-actions">
+        <button 
+          class="cancel-button" 
+          type="button" 
+          [disabled]="isSaving" 
+          (click)="close()"
+        >
+          Cancel
+        </button>
+        <button
+          class="confirm-button"
+          type="submit"
+          [disabled]="isSaving"
+        >
+          {{
+            isSaving
+              ? 'Saving…'
+              : (isEditMode ? 'Save changes' : 'Confirm')
+          }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>
+
+@if (pickerType; as currentPicker) {
+  <div class="picker-backdrop" (click)="closePicker()">
+    <section class="picker-modal" role="dialog" aria-modal="true" [attr.aria-labelledby]="currentPicker + '-picker-title'" (click)="$event.stopPropagation()">
+      <header class="picker-header">
+        <h2 [id]="currentPicker + '-picker-title'">Choose {{ currentPicker === 'category' ? 'category' : 'tags' }}</h2>
+        <button 
+          
+          [class]="pickerType == 'category' ? 'add-item-button category' : 'add-item-button tag'" 
+          type="button" 
+          [attr.aria-label]="'Add ' + currentPicker" 
+          (click)="openAddItemModal()"
+        >+
+        </button>
+      </header>
+      <div class="picker-content">
+        @if (isPickerLoading) {
+          <p class="picker-state">Loading {{ currentPicker === 'category' ? 'categories' : 'tags' }}…</p>
+        } @else if (pickerError) {
+          <p class="picker-state error" role="alert">{{ pickerError }}</p>
+        } @else if (currentPicker === 'category' && categories.length === 0) {
+          <p class="picker-state">No categories exist yet.</p>
+        } @else if (currentPicker === 'tag' && tags.length === 0) {
+          <p class="picker-state">No tags exist yet.</p>
+        } @else {
+          <div class="picker-grid">
+            @if (currentPicker === 'category') {
+              @for (category of categories; track category.id) {
+                <button class="picker-card category-card" type="button" [class.selected]="pendingCategory?.id === category.id" (click)="selectCategory(category)">{{ category.name }}</button>
+              }
+            } @else {
+              @for (tag of tags; track tag.id) {
+                <button class="picker-card tag-card" type="button" [class.selected]="isTagSelected(tag.id)" (click)="toggleTag(tag)">{{ tag.name }}</button>
+              }
+            }
+          </div>
+        }
+      </div>
+      <footer class="picker-actions">
+        <button class="cancel-button" type="button" (click)="closePicker()">Cancel</button>
+        <button class="confirm-button" type="button" [disabled]="currentPicker === 'category' && !pendingCategory" (click)="confirmPicker()">Confirm</button>
+      </footer>
+    </section>
+  </div>
+  @if (isAddItemModalOpen) {
+    <app-add-category-modal [itemType]="currentPicker" (closed)="closeAddItemModal()" (created)="onItemCreated($event)" />
+  }
+}

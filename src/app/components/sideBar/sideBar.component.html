@@ -1,0 +1,52 @@
+<aside class="sidebar sidebar-left" aria-label="Main navigation">
+  <a class="brand" href="/">Finance App</a>
+<nav>
+  <a
+    class="nav-link"
+    routerLink="/"
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    Dashboard
+  </a>
+
+  <a
+    class="nav-link"
+    routerLink="/transactions"
+    routerLinkActive="active"
+  >
+    Transactions
+  </a>
+
+  <a
+    class="nav-link"
+    routerLink="/budgets"
+    routerLinkActive="active"
+  >
+    Budgets
+  </a>
+
+  <a
+    class="nav-link"
+    routerLink="/categoriesTags"
+    routerLinkActive="active"
+  >
+    Categories & Tags
+  </a>
+
+  <a
+    class="nav-link"
+    routerLink="/settings"
+    routerLinkActive="active"
+  >
+    Settings
+  </a>
+</nav>
+
+  @if (username) {
+    <div class="account-actions">
+    <p class="username">{{ username }}</p>
+    <button class="sign-out" type="button" (click)="signOut()">Sign out</button>
+    </div>
+  }
+</aside>

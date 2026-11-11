@@ -1,0 +1,72 @@
+:host {
+	display: block;
+}
+
+.sidebar-left {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+}
+
+.brand {
+	display: block;
+	margin-bottom: 2.5rem;
+	color: #172033;
+	font-size: 1.125rem;
+	font-weight: 800;
+	text-decoration: none;
+}
+
+nav {
+	display: grid;
+	gap: .35rem;
+}
+
+.nav-link {
+	padding: .7rem .75rem;
+	border-radius: .5rem;
+	color: #516078;
+	text-decoration: none;
+}
+
+.nav-link:hover, .nav-link.active {
+	background: #eaf6f1;
+	color: #176b52;
+	font-weight: 700;
+}
+
+.account-actions {
+	margin-top: auto;
+	padding-top: 1.5rem;
+}
+
+.username {
+	margin: 0 0 .75rem;
+	overflow-wrap: anywhere;
+	color: #26334a;
+	font-weight: 700;
+}
+
+.sign-out {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: #b42318;
+	cursor: pointer;
+	font: inherit;
+	font-weight: 700;
+}
+
+.sign-out:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+	nav {
+		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+	}
+
+	.account-actions {
+		margin-top: 1.5rem;
+	}
+}

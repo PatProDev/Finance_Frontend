@@ -1,0 +1,7 @@
+@if (messageService.message(); as message) {
+  <button type="button" aria-label="Status message" (click)="messageService.dismiss()">
+    <div class="toast" [class.error]="message.type === 'error'" role="status" aria-live="polite">
+      <span>{{ message.text }}</span>
+    </div>
+  </button>
+}

@@ -1,0 +1,43 @@
+<section class="transactions" aria-labelledby="transactions-heading">
+  <div class="section-header">
+    <div>
+      <h2 id="transactions-heading">Transactions</h2>
+      <p class="eyebrow">Recent activity</p>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <p class="state-message">Loading transactions…</p>
+  } @else if (loadError) {
+    <p class="state-message error" role="alert">{{ loadError }}</p>
+  } @else if (transactions.length === 0) {
+    <p class="state-message">No transactions yet.</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (transaction of transactions; track transaction.id) {
+            <tr>
+              <td>#{{ transaction.id }}</td>
+              <td>{{ transaction.amount | number: '1.2-2' }} {{ transaction.currency }}</td>
+              <td>{{ transaction.date | date: 'dd.MM.yyyy' }}</td>
+              <td>
+                <span class="status" [class.outgoing]="transaction.reducesBalance" [class.incoming]="!transaction.reducesBalance">
+                  {{ transaction.reducesBalance ? 'Outgoing' : 'Incoming' }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

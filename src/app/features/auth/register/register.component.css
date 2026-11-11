@@ -1,0 +1,97 @@
+:host {
+	display: block;
+}
+
+.register-page {
+	display: grid;
+	min-height: 100vh;
+	padding: 1.5rem;
+	place-items: center;
+}
+
+.register-card {
+	width: min(100%, 26rem);
+	padding: 2.5rem;
+	border: 1px solid #dbe3ef;
+	border-radius: 1rem;
+	background: #fff;
+	box-shadow: 0 1rem 2.5rem rgb(23 32 51 / 10%);
+}
+
+h1 {
+	margin: 0;
+	color: #172033;
+	font-size: 2rem;
+}
+
+.intro {
+	margin: .75rem 0 2rem;
+	color: #516078;
+}
+
+.register-form {
+	display: grid;
+	gap: 1.25rem;
+}
+
+.form-field {
+	display: grid;
+	gap: .5rem;
+}
+
+label {
+	color: #26334a;
+	font-weight: 700;
+}
+
+input {
+	width: 100%;
+	box-sizing: border-box;
+	padding: .75rem .875rem;
+	border: 1px solid #b9c5d6;
+	border-radius: .5rem;
+	color: #172033;
+	font: inherit;
+}
+
+input:focus {
+	outline: 3px solid rgb(23 107 82 / 20%);
+	border-color: #176b52;
+}
+
+button {
+	padding: .8rem 1rem;
+	border: 0;
+	border-radius: .5rem;
+	background: #176b52;
+	color: #fff;
+	cursor: pointer;
+	font: inherit;
+	font-weight: 700;
+}
+
+button:hover {
+	background: #11543f;
+}
+
+button:disabled {
+	cursor: wait;
+	opacity: .7;
+}
+
+.register-error {
+	margin: 0;
+	color: #b42318;
+	font-weight: 600;
+}
+
+.login-prompt {
+	margin: 1.5rem 0 0;
+	color: #516078;
+	text-align: center;
+}
+
+.login-prompt a {
+	color: #176b52;
+	font-weight: 700;
+}

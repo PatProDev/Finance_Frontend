@@ -1,0 +1,163 @@
+<section class="transactions" aria-labelledby="transactions-heading">
+  <div class="section-header">
+    <div>
+      <h2 id="transactions-heading">Transactions</h2>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <p class="state-message">Loading transactions…</p>
+  } @else if (loadError) {
+    <p class="state-message error" role="alert">{{ loadError }}</p>
+  } @else if (transactions.length === 0) {
+    <p class="state-message">No transactions yet.</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Category</th>
+            <th scope="col">Tags</th>
+            <th scope="col">Description</th>
+            <th scope="col">Type</th>
+            <th scope="col" class="actions-column">
+              <button 
+                type="button" 
+                class="add-button" 
+                aria-label="Add transaction" 
+                title="Add transaction"
+                (click)="onAddTransaction()"
+              >
+                  <img src="assets/icons8-plus-24.png" alt="">
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (transaction of transactions; track transaction.id) {
+            <tr
+              class="transaction-row"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="'Edit transaction ' + transaction.id"
+              (click)="onEditTransaction(transaction)"
+              (keydown.enter)="onEditTransaction(transaction)"
+              (keydown.space)="onEditTransaction(transaction); $event.preventDefault()"
+            >
+              <td>#{{ transaction.id }}</td>
+              <td>{{ transaction.amount | number: '1.2-2' }} {{ transaction.currency }}</td>
+              <td>{{ transaction.date | date: 'dd.MM.yyyy' }}</td>
+              <td>{{ getCategoryName(transaction.categoryId) }}</td>
+
+              <td>
+                @for (tag of transaction.tags; track tag.id) {
+                  <span class="tag">{{ tag.name }}@if (!$last) {, }</span>
+                }
+              </td>
+
+              <td>{{ transaction.description || 'No description' }}</td>
+
+              <td>
+                <span
+                  class="status"
+                  [class.outgoing]="transaction.reducesBalance"
+                  [class.incoming]="!transaction.reducesBalance"
+                >
+                  {{ transaction.reducesBalance ? 'Outgoing' : 'Incoming' }}
+                </span>
+              </td>
+
+              <td class="actions-column">
+                <div>
+                  <button
+                    type="button"
+                    class="delete-button"
+                    aria-label="Delete transaction"
+                    title="Delete transaction"
+                    (click)="onDeleteTransaction(transaction.id); $event.stopPropagation();"
+                  >
+                    <img src="assets/icons8-trash-24.png" alt="">
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
+
+@if (isAddTransactionModalOpen) {
+  <app-add-transaction-modal
+    (created)="onTransactionCreated()"
+    (closed)="closeAddTransactionModal()"
+  />
+}
+
+@if (isEditTransactionModalOpen && selectedTransaction) {
+  <app-add-transaction-modal
+    [transaction]="selectedTransaction"
+    (created)="onTransactionCreated()"
+    (closed)="closeEditTransactionModal()"
+  />
+}
+
+
+@if (isDeleteModalOpen) {
+  <div class="delete-modal-backdrop" (click)="closeDeleteModal()">
+    <section
+      class="delete-modal"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="delete-modal-title"
+      aria-describedby="delete-modal-description"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="delete-modal-header">
+        <h2 id="delete-modal-title">Delete transaction?</h2>
+
+        <button
+          class="delete-modal-close"
+          type="button"
+          aria-label="Close"
+          [disabled]="isDeleting"
+          (click)="closeDeleteModal()"
+        >
+          ×
+        </button>
+      </header>
+
+      <div class="delete-modal-content">
+        <p id="delete-modal-description">
+          Are you sure you want to delete this transaction?
+          This action cannot be undone.
+        </p>
+      </div>
+
+      <footer class="delete-modal-actions">
+        <button
+          class="delete-cancel-button"
+          type="button"
+          [disabled]="isDeleting"
+          (click)="closeDeleteModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="delete-confirm-button"
+          type="button"
+          [disabled]="isDeleting"
+          (click)="confirmDeleteTransaction()"
+        >
+          {{ isDeleting ? 'Deleting…' : 'Delete' }}
+        </button>
+      </footer>
+    </section>
+  </div>
+}
+
